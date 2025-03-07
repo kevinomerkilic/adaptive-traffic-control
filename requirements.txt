@@ -16,7 +16,15 @@ torch>=1.8.0  # see https://pytorch.org/get-started/locally (recommended)
 torchvision>=0.9.0
 tqdm>=4.66.3
 ultralytics>=8.2.34  # https://ultralytics.com
-# protobuf<=3.20.1  # https://github.com/ultralytics/yolov5/issues/8012
+
+# AWS Integration -----------------------------------------------------------
+boto3>=1.37.8
+python-dotenv>=1.0.1
+
+# Web Application ----------------------------------------------------------
+flask>=3.0.0
+flask-socketio>=5.3.6
+gevent-websocket>=0.10.1
 
 # Logging ---------------------------------------------------------------------
 # tensorboard>=2.4.1

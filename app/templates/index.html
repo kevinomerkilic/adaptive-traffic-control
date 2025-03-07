@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Traffic AI - Live Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand">Smart Traffic AI</span>
+            <div class="navbar-text text-light" id="current-time"></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid dashboard">
+        <div class="row">
+            <!-- Video Feed Column -->
+            <div class="col-md-5">
+                <!-- Traffic Light Timer -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Smart Traffic Light Control</span>
+                        <span class="badge bg-secondary" id="current-light">Initializing...</span>
+                    </div>
+                    <div class="card-body bg-dark">
+                        <div class="traffic-light-container">
+                            <div class="traffic-light-timers d-flex justify-content-around mb-3">
+                                <div class="timer-group">
+                                    <div class="light-label text-success">Green</div>
+                                    <div class="timer" id="green-timer">20s</div>
+                                    <div class="arrow">↓</div>
+                                    <div class="timer-adjusted text-muted" id="green-timer-adjusted">40s</div>
+                                </div>
+                                <div class="timer-group">
+                                    <div class="light-label text-warning">Yellow</div>
+                                    <div class="timer" id="yellow-timer">3s</div>
+                                    <div class="arrow">↓</div>
+                                    <div class="timer-adjusted text-muted" id="yellow-timer-adjusted">3s</div>
+                                </div>
+                                <div class="timer-group">
+                                    <div class="light-label text-danger">Red</div>
+                                    <div class="timer" id="red-timer">40s</div>
+                                    <div class="arrow">↓</div>
+                                    <div class="timer-adjusted text-muted" id="red-timer-adjusted">20s</div>
+                                </div>
+                            </div>
+                            <div class="traffic-light">
+                                <div class="light red" id="red-light"></div>
+                                <div class="light yellow" id="yellow-light"></div>
+                                <div class="light green" id="green-light"></div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <small class="text-muted">Current timings above, adjusted timings below</small>
+                                <br>
+                                <small class="text-muted">Low congestion: Green 40s, Yellow 3s, Red 20s</small>
+                                <br>
+                                <small class="text-muted">Moderate congestion: Green 20s, Yellow 3s, Red 40s</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card main-card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Live Traffic Feed</span>
+                        <span id="status-badge" class="badge bg-success">Live</span>
+                    </div>
+                    <div class="video-container">
+                        <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Traffic Feed">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Column -->
+            <div class="col-md-7">
+                <!-- Quick Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="card stat-card" id="congestion-card">
+                            <div class="card-body">
+                                <h6 class="stat-title">Congestion Level</h6>
+                                <div class="stat-value" id="congestion-level">Low</div>
+                                <div class="stat-subtitle" id="vehicle-count">0 vehicles</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="stat-title">Peak Traffic</h6>
+                                <div class="stat-value" id="peak-traffic">0</div>
+                                <div class="stat-subtitle">vehicles/min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Traffic Analysis -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Traffic Analysis
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detection List -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Detection List</span>
+                        <button id="clear-detections" class="btn btn-outline-light btn-sm">Clear</button>
+                    </div>
+                    <div class="card-body">
+                        <ul id="detection-list" class="list-group detection-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
